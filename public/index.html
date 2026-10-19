@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lighter</title>
+  <meta name="description" content="Track cigarettes, see your trend, and cut down gradually.">
+  <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161615" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Login -->
+  <main id="login-view" class="login" hidden>
+    <div class="login-card">
+      <div class="brand brand-lg"><span class="brand-mark" aria-hidden="true"></span>Lighter</div>
+      <p class="muted">Log it, see the trend, smoke a little less each week.</p>
+      <form id="login-form" autocomplete="on" novalidate>
+        <label>Username
+          <input name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- App -->
+  <div id="app-view" hidden>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Lighter</div>
+      <nav class="tabs" aria-label="Sections">
+        <button class="tab" data-tab="today" aria-current="page">Today</button>
+        <button class="tab" data-tab="trends">Trends</button>
+        <button class="tab" data-tab="history">History</button>
+      </nav>
+      <div class="top-actions">
+        <button id="install-btn" class="btn btn-ghost btn-sm" hidden>Install</button>
+        <button id="user-btn" class="btn btn-ghost btn-sm" aria-haspopup="true" aria-expanded="false"></button>
+        <div id="user-menu" class="menu" hidden>
+          <button id="logout-btn" class="menu-item">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="offline-banner" class="banner" hidden>You're offline. Changes need a connection to save.</div>
+
+    <!-- Today -->
+    <section id="tab-today" class="page" aria-labelledby="today-h">
+      <h1 id="today-h" class="sr-only">Today</h1>
+      <div class="today-grid">
+        <div class="card count-card">
+          <div class="day-nav">
+            <button id="day-prev" class="icon-btn" type="button" aria-label="Previous day">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>
+            </button>
+            <label class="day-pick">
+              <span class="sr-only">Day to log for</span>
+              <input id="day-input" type="date">
+            </label>
+            <button id="day-next" class="icon-btn" type="button" aria-label="Next day">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg>
+            </button>
+          </div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+              <circle id="ring-fill" class="ring-fill" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="ring-center">
+              <div id="today-count" class="big-num">0</div>
+              <div id="today-sub" class="muted small">today</div>
+            </div>
+          </div>
+          <p id="today-status" class="status-line"></p>
+
+          <div class="trigger-pick" role="group" aria-label="What prompted it? (optional)">
+            <span class="muted small">What prompted it? <span class="faint">optional</span></span>
+            <div id="trigger-chips" class="chips"></div>
+          </div>
+          <button id="log-btn" class="btn btn-log">Log a cigarette</button>
+          <button id="day-today" class="btn btn-ghost btn-sm" type="button" hidden>Back to today</button>
+        </div>
+
+        <div class="side-stack">
+          <div class="card stat-card">
+            <div class="stat-label">Since the last one</div>
+            <div id="since-last" class="stat-value">–</div>
+            <div id="since-detail" class="muted small"></div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Last 7 days</div>
+            <div id="week-avg" class="stat-value">–</div>
+            <div id="week-detail" class="muted small"></div>
+          </div>
+          <div class="card">
+            <form id="limit-form" class="limit-form">
+              <label for="limit-input" class="stat-label">Daily limit</label>
+              <div class="inline">
+                <input id="limit-input" type="number" inputmode="numeric" min="0" max="200" placeholder="None">
+                <button class="btn btn-sm" type="submit">Save</button>
+              </div>
+              <p class="muted small">Set a ceiling and lower it a little each week. It shows as a line on the trend.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trends -->
+    <section id="tab-trends" class="page" hidden aria-labelledby="trends-h">
+      <div class="page-head">
+        <h1 id="trends-h">Your trend</h1>
+        <div class="seg" role="radiogroup" aria-label="Time range">
+          <button role="radio" data-range="14">2W</button>
+          <button role="radio" data-range="30" aria-checked="true">1M</button>
+          <button role="radio" data-range="90">3M</button>
+          <button role="radio" data-range="365">1Y</button>
+          <button role="radio" data-range="all">All</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="headline">
+          <div id="trend-badge" class="trend-badge"></div>
+          <div>
+            <div id="trend-title" class="headline-title"></div>
+            <div id="trend-sub" class="muted small"></div>
+          </div>
+        </div>
+
+        <div class="viz-root">
+          <div class="chart-title-row">
+            <div class="chart-title" id="chart-title">Cigarettes per day</div>
+            <div class="legend" id="chart-legend"></div>
+          </div>
+          <div id="trend-chart" class="chart" role="img"></div>
+          <div id="chart-tip" class="tip" hidden></div>
+          <details class="table-view">
+            <summary>Show as table</summary>
+            <div class="table-scroll"><table id="trend-table"></table></div>
+          </details>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="card kpi"><div class="stat-label">Total in range</div><div id="k-total" class="stat-value">–</div></div>
+        <div class="card kpi"><div class="stat-label">Average per day</div><div id="k-avg" class="stat-value">–</div></div>
+        <div class="card kpi"><div class="stat-label">Lowest day</div><div id="k-low" class="stat-value">–</div><div id="k-low-d" class="muted small"></div></div>
+        <div class="card kpi"><div class="stat-label">Days at or under limit</div><div id="k-under" class="stat-value">–</div><div id="k-under-d" class="muted small"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="viz-root">
+          <div class="chart-title-row">
+            <div class="chart-title">Time of day <span class="muted small">· average per day in this range</span></div>
+          </div>
+          <div id="hour-chart" class="chart chart-sm" role="img"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section id="tab-history" class="page" hidden aria-labelledby="history-h">
+      <div class="page-head">
+        <h1 id="history-h">History</h1>
+        <button id="add-missed-btn" class="btn btn-sm">Add a missed one</button>
+      </div>
+      <form id="missed-form" class="card missed-form" hidden>
+        <label>When
+          <input id="missed-when" type="datetime-local" required>
+        </label>
+        <label>Trigger <span class="faint">optional</span>
+          <select id="missed-trigger"></select>
+        </label>
+        <label class="grow">Note <span class="faint">optional</span>
+          <input id="missed-note" maxlength="280">
+        </label>
+        <div class="inline">
+          <button class="btn btn-primary btn-sm" type="submit">Add</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="missed-cancel">Cancel</button>
+        </div>
+      </form>
+      <div id="history-list"></div>
+      <button id="history-more" class="btn btn-ghost btn-block" hidden>Show earlier days</button>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+      <span id="toast-msg"></span>
+      <button id="toast-action" class="toast-btn" hidden>Undo</button>
+    </div>
+  </div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "lighter",
+  "version": "2.0.0",
+  "description": "Track cigarettes, see your trend, and cut down gradually. Node + SQLite, no dependencies.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server.js",
+    "hash": "node scripts/hash-password.js",
+    "seed": "node --disable-warning=ExperimentalWarning scripts/seed-demo.js"
+  }
+}

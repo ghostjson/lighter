@@ -1,0 +1,6 @@
+{
+  "users": [
+    { "username": "akhil", "displayName": "Akhil", "password": "change-me" },
+    { "username": "demo", "passwordHash": "paste output of: npm run hash -- \"your password\"" }
+  ]
+}

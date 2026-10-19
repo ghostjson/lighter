@@ -1,0 +1,20 @@
+{
+  "name": "Lighter",
+  "short_name": "Lighter",
+  "description": "Track cigarettes, see your trend, and cut down gradually.",
+  "start_url": "/#today",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#f6f4ef",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Trends", "url": "/#trends" },
+    { "name": "History", "url": "/#history" }
+  ]
+}
