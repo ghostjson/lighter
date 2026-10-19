@@ -27,6 +27,9 @@ npm run seed -- akhil   # replaces akhil's entries with ~60 days of sample data
 
 `npm run dev` restarts the server when files change.
 
+If the port is taken you'll see `Port 3000 is already in use`; run `PORT=3030 npm start` instead.
+There's no build step: after pulling changes, restart the server and hard-reload the page.
+
 ## Users (no registration)
 
 Users come from `users.json`, which is read every time the server starts:
@@ -53,6 +56,9 @@ Users come from `users.json`, which is read every time the server starts:
 
 - **Today**: one-tap logging with optional trigger (coffee, stress, after a meal…), undo,
   today's count against your daily limit, time since the last one, last 7 days vs the week before.
+  **Log for other dates**: use the date picker (or ‹ › arrows) above the counter to switch to a
+  past day, then tap "Add one to <day>" once per cigarette. Entries get that date with the
+  current clock time; "Back to today" returns to normal logging. Future dates aren't allowed.
 - **Trends**: the intake graph. Bars for each day, a 7-day rolling average line, and your
   daily limit as a dashed line. Ranges 2W / 1M / 3M / 1Y / All (ranges over ~4 months
   switch to weekly bars with a 4-week average). The headline says whether you're **up or
